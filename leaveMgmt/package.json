@@ -1,0 +1,27 @@
+{
+  "name": "leaveMgmt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "nodemon ./bin/www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "date-diff": "^0.2.1",
+    "express": "^4.16.4",
+    "express-fileupload": "^1.1.4",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.2.10"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.10"
+  }
+}
