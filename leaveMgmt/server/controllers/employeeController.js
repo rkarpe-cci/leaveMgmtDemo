@@ -3,6 +3,7 @@ const employeeLeaves = require('../models').empLeaves
 const leave = require('../models').leaves
 const leaveTypes = require('../models').leavetypes
 const employeeTypes = require('../models').empTypes
+const test = require('../models/index')
 const Sequelize = require('Sequelize');
 const Op = Sequelize.Op;
 const moment = require('moment');
@@ -104,6 +105,16 @@ module.exports = {
         });
     },
     findById(req, res) {
+        // var id = req.params.empId;
+        // test.sequelize.query("call findEmployeeById()", function (err, result) {
+        //     if (err) {
+        //         res.send(err);
+        //     } else {
+        //         res.send(result);
+        //     }
+
+        // });
+        //
         employee.findByPk(req.params.empId).then(employee => {
             if (!employee) {
                 return res.status(404).send({

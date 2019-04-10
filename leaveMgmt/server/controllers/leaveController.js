@@ -62,7 +62,7 @@ module.exports = {
                         });
                     }
                     //&& isNonPaidLeave == 0
-                    else if (leaveTypeId == 1 && leaves.casualLeave < diffDays && isHalfDay == 0 ) {
+                    else if (leaveTypeId == 1 && leaves.casualLeave < diffDays && isHalfDay == 0) {
                         return res.status(404).send({
                             message: 'You do not have sufficient casual leaves',
                         });
@@ -305,21 +305,34 @@ module.exports = {
             .catch(error => res.status(400).send(error));
     },
     listApprovedLeaves(req, res) {
-        employee.findAll({
-            include: [{
-                model: leave,
-                as: 'empLeaves',
-                where: { status: 1 }
-            }],
-        }).then(leave => {
-            if (!leave) {
-                res.status(404).send({
-                    message: 'Leaves not found',
-                });
-            }
-            return res.status(200).send(leave);
-        })
-            .catch(error => res.status(400).send(error));
+        test.sequelize.query('CALL getApprovedLeaves();')
+            .then(data => {
+                if (!data) {
+                    res.status(404).send({ messsage: 'data not found', });
+                }
+                else {
+                    res.send(data);
+                }
+
+            }).catch(error => {
+                res.status(400).send(error);
+            });
+        // employee.findAll({
+        //     include: [{
+        //         model: leave,
+        //         as: 'empLeaves',
+        //         where: { status: 1 }
+        //     }],
+        // }).then(leave => {
+        //     if (!leave) {
+        //         res.status(404).send({
+        //             message: 'Leaves not found',
+        //         });
+        //     }
+        //     return res.status(200).send(leave);
+        // })
+        //     .catch(error => res.status(400).send(error));
+
     },
     approveLeaves(req, res) {
         var leaveId = req.body.id;
@@ -339,7 +352,7 @@ module.exports = {
                 console.log(leaveType);
                 leave.update(
                     { status: 1 },
-                    { where: { empId: empId } })
+                    { where: { id: leaveId, empId: empId } })
                 if (leaveType == 1) {
                     console.log('inside casual');
                     employeeLeaves.update(
@@ -438,5 +451,37 @@ module.exports = {
             }
         })
     },
-
+    rejectLeaves(req, res) {
+        var leaveId = req.body.id;
+        var empId = req.body.empId;
+        leave.findOne({
+            where: { status: 0, id: leaveId, empId: empId }
+        }).then(function (leaveData) {
+            if (leaveData == null) {
+                res.status(404).send({
+                    message: 'Leaves not found',
+                });
+            }
+            else {
+                //res.send(leaveData);
+                leave.update(
+                    { status: 2 },
+                    { where: { id: leaveId, empId: empId } }
+                ).then(() => {
+                    res.status(200).send('Leave Rejected')
+                });
+            }
+        })
+    },
+    getRejectedLeaves(req, res) {
+        test.sequelize.query('CALL getRejectedLeaves();')
+            .then(function (data) {
+                if (!data) {
+                    res.send({ message: 'Rejected leaves not found', });
+                }
+                else {
+                    res.send(data);
+                }
+            });
+    }
 };
