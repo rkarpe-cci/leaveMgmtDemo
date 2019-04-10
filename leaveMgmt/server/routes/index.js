@@ -47,12 +47,16 @@ module.exports = app => {
     app.post('/api/ApplyEmployeeLeave', upload.single('image'), leaveController.create);//Apply Leave
     app.put('/api/updateLeave/:leaveId', upload.single('image'), leaveController.update);// Update Leave 
     app.delete('/api/deleteLeave/:leaveId/:empId', leaveController.deleteLeave);//delete Leave
+    
 
    
     app.get('/api/listUnApprovedLeaves', leaveController.listUnApprovedLeaves);//list Approved Leaves
     app.get('/api/listApprovedLeaves', leaveController.listApprovedLeaves);//List unapproved leaves
+    
+    app.get('/api/getRejectedLeaves', leaveController.getRejectedLeaves);//List Rejected leaves
 
     app.post('/api/approveEmployeeLeaves', leaveController.approveLeaves);// approve leaves
+    app.post('/api/rejectEmployeeLeave',leaveController.rejectLeaves);//Reject Leave
     //calculating earned leaves
     app.post('/api/calculateEarnedLeavesforEmployee', leaveController.calculateEarnedLeaves);
 
