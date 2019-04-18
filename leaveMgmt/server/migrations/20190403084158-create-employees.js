@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('employees', {
@@ -36,7 +36,7 @@ module.exports = {
           model: 'empTypes',
           key: 'id',
           as: 'empTypesid'
-        },
+        }
       },
       panCardNo: {
         type: Sequelize.STRING
@@ -44,10 +44,18 @@ module.exports = {
       dob: {
         type: Sequelize.DATE
       },
-
-    });
+      userName: {
+        type: Sequelize.STRING
+      },
+      email: {
+        type: Sequelize.STRING
+      },
+      password: {
+        type: Sequelize.STRING
+      }
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('employees');
+    return queryInterface.dropTable('employees')
   }
-};
+}

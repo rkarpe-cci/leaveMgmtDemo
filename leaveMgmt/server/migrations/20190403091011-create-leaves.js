@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('leaves', {
@@ -34,38 +34,38 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      leaveTypeId:{
-        type:Sequelize.INTEGER,
-        onDelete:'CASCADE',
-        allowNull:false,
-        references:{
-          model:'leavetypes',
-          key:'id',
-          as:'leaveTypeId'
-        },
+      leaveTypeId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'leavetypes',
+          key: 'id',
+          as: 'leaveTypeId'
+        }
       },
-      empId:{
-        type:Sequelize.INTEGER,
-        onDelete:'CASCADE',
-        allowNull:false,
-        references:{
-          model:'employees',
-          key:'id',
-          as:'empId'
-        },
+      empId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'employees',
+          key: 'id',
+          as: 'empId'
+        }
       },
-      isHalfDay:{
+      isHalfDay: {
         type: Sequelize.TINYINT
       },
-      isMorningHalf:{
+      isMorningHalf: {
         type: Sequelize.TINYINT
-      },
+      }
       // isNonPaidLeave:{
       //   type: Sequelize.TINYINT
       // },
-    });
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('leaves');
+    return queryInterface.dropTable('leaves')
   }
-};
+}

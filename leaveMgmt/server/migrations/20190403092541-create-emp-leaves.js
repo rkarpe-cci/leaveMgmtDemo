@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('empLeaves', {
@@ -25,19 +25,19 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      empId:{
-        type:Sequelize.INTEGER,
-        onDelete:'CASCADE',
-        allowNull:false,
-        references:{
-          model:'employees',
-          key:'id',
-          as:'empLeaveId'
-        },
-      },
-    });
+      empId: {
+        type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        allowNull: false,
+        references: {
+          model: 'employees',
+          key: 'id',
+          as: 'empLeaveId'
+        }
+      }
+    })
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('empLeaves');
+    return queryInterface.dropTable('empLeaves')
   }
-};
+}

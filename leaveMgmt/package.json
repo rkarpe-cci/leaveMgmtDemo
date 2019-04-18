@@ -1,5 +1,5 @@
 {
-  "name": "leaveMgmt",
+  "name": "leavemgmt",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,17 +11,30 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "date-diff": "^0.2.1",
     "express": "^4.16.4",
     "express-fileupload": "^1.1.4",
+    "express-session": "^1.16.1",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "mysql2": "^1.6.5",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "sequelize": "^5.2.10"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10"
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "eslint": "^5.16.0",
+    "mocha": "^6.1.3",
+    "nodemon": "^1.18.10",
+    "should": "^13.2.3",
+    "standard": "^12.0.1",
+    "supertest": "^4.0.2"
   }
 }
