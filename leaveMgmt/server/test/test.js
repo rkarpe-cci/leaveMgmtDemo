@@ -57,19 +57,21 @@ describe("Users", () => {
     //       .end((err, res) => {
     //         res.should.have.status(200);
     //         res.body.should.be.a('object');
-    //         done();
-    //       });
+
+    //       }).finally(done)
     //   })
     // })
     // Test to get single student record
     it("should not get a single user record", (done) => {
-      const id = 3;
+      const id = 50;
       server
         .get(`/${id}`)
         .end((err, res) => {
           res.should.have.status(200);
+          //res.body.should.be.a('array');
+          //res.body.length.should.be.eql(0);
           done();
-        });
+        })
     });
 
     it('it should not POST a user without userName field', (done) => {
@@ -81,7 +83,7 @@ describe("Users", () => {
         'empTypeId': 1,
         'panCardNo': "yuio5671y7",
         'dob': "1993-05-05",
-        //'userName': "priya20",
+        'userName': "",
         'email': "abc@gmail.com",
         'password': "qwerty12"
       }
@@ -89,14 +91,10 @@ describe("Users", () => {
         .post('/api/createUser')
         .send(user)
         .end((err, res) => {
-          //res.should.have.status(400);
-          res.should.have.status(200);
+          res.should.have.status(404);
           res.body.should.be.a('object');
-          //res.body.should.have.property('message');
-          // res.body.should.have.property('errors');
           done();
-        });
+        })
     })
-
   });
 });
