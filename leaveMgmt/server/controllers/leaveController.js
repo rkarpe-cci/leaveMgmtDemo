@@ -80,7 +80,12 @@ module.exports = {
             return res.status(404).send({
               message: 'toDate cannot be less than fromDate,please enter different todate'
             })
-          } else {
+          } else if (leaveTypeId == 3 && leaves.earnedLeave < diffDays || leaveTypeId == 1 && leaves.casualLeave < diffDays || leaveTypeId == 2, leaves.sickLeave < diffDays) {
+            return res.status(404).send({
+              message: 'You can apply for unpaid leaves'
+            })
+          }
+          else {
             if (isHalfDay == 1) {
               diffDays = 0.5
               var date3 = moment(req.body.fromDate).format('YYYY-MM-DD')
@@ -94,12 +99,12 @@ module.exports = {
             } else {
               var sampleFile = ''
             }
-            // if (req.body.nonPaidLeave == 1) {
-            //     var nonPaidLeave = req.body.isNonPaidLeave
-            // }
-            // else {
-            //     nonPaidLeave = 0
-            // }
+            if (leaveTypeId == 4) {
+              var unpaidLeave = 1
+            }
+            else {
+              unpaidLeave = 0
+            }
             return leave
               .create(
                 {
@@ -112,8 +117,8 @@ module.exports = {
                   'leaveTypeId': req.body.leaveTypeId,
                   'empId': req.body.empId,
                   'isHalfDay': req.body.isHalfDay,
-                  'isMorningHalf': req.body.isMorningHalf
-                  // 'isNonPaidLeave': nonPaidLeave
+                  'isMorningHalf': req.body.isMorningHalf,
+                  'isUnpaiPaidLeave': unpaidLeave
                 }).then(leave => res.status(201).send(leave))
               .catch(error => res.status(400).send(error))
           }
@@ -205,7 +210,12 @@ module.exports = {
                   return res.status(404).send({
                     message: 'toDate cannot be less than fromDate,please enter different todate'
                   })
-                } else {
+                } else if (leaveTypeId == 3 && leaves.earnedLeave == 0 || leaveTypeId == 1 && leaves.casualLeave == 0 || leaveTypeId == 2, leaves.sickLeave == 0) {
+                  return res.status(404).send({
+                    message: 'You can apply for unpaid leaves'
+                  })
+                }
+                else {
                   if (isHalfDay == 1) {
                     diffDays = 0.5
                     var date3 = moment(req.body.fromDate).format('YYYY-MM-DD')
@@ -219,13 +229,12 @@ module.exports = {
                   } else {
                     var sampleFile = ''
                   }
-                  // if (req.body.isNonPaidLeave == 1) {
-                  //     var nonPaidLeave = req.body.isNonPaidLeave
-                  // }
-                  // else {
-                  //     var nonPaidLeave = 0
-                  // }
-
+                  if (leaveTypeId == 4) {
+                    var unpaidLeave = req.body.isUnpaiPaidLeave
+                  }
+                  else {
+                    unpaidLeave = 0
+                  }
                   return leave
                     .update(
                       {
@@ -238,8 +247,8 @@ module.exports = {
                         'leaveTypeId': req.body.leaveTypeId,
                         'empId': req.body.empId,
                         'isHalfDay': req.body.isHalfDay,
-                        'isMorningHalf': req.body.isMorningHalf
-                        // 'isNonPaidLeave': nonPaidLeave
+                        'isMorningHalf': req.body.isMorningHalf,
+                        'isUnpaiPaidLeave': unpaidLeave
                       },
                       { where: { id: leaveId } }
                     ).then(() => {
@@ -271,7 +280,7 @@ module.exports = {
         as: 'empLeaves',
         where: { status: 0 }
       }]
-    }).then(leave => {
+    }).then(function (leave) {
       if (!leave) {
         return res.status(404).send({
           message: 'Leaves not found'
@@ -280,85 +289,86 @@ module.exports = {
       return res.status(200).send(leave)
     })
       .catch(error => res.status(400).send(error))
+
   },
   listApprovedLeaves(req, res) {
-    test.sequelize.query('CALL getApprovedLeaves()')
-      .then(data => {
-        if (!data) {
-          res.status(404).send({ messsage: 'data not found' })
-        } else {
-          res.send(data)
-        }
-      }).catch(error => {
-        res.status(400).send(error)
-      })
-    // employee.findAll({
-    //     include: [{
-    //         model: leave,
-    //         as: 'empLeaves',
-    //         where: { status: 1 }
-    //     }],
-    // }).then(leave => {
-    //     if (!leave) {
-    //         res.status(404).send({
-    //             message: 'Leaves not found',
-    //         })
+    // test.sequelize.query('CALL getApprovedLeaves()')
+    //   .then(data => {
+    //     if (!data) {
+    //       res.status(404).send({ messsage: 'data not found' })
+    //     } else {
+    //       res.send(data)
     //     }
-    //     return res.status(200).send(leave)
-    // })
-    //     .catch(error => res.status(400).send(error))
+    //   }).catch(error => {
+    //     res.status(400).send(error)
+    //   })
+    employee.findAll({
+      include: [{
+        model: leave,
+        as: 'empLeaves',
+        where: { status: 1 }
+      }],
+    }).then(leave => {
+
+      if (!leave) {
+        res.status(404).send({
+          message: 'Leaves not found',
+        })
+      }
+      return res.status(200).send(leave)
+    })
+      .catch(error => res.status(400).send(error))
   },
   approveLeaves(req, res) {
     var leaveId = req.body.id
     var empId = req.body.empId
-    // if (req.user.empTypeId == 1) {
-    //   //allow to approve leave
-
-    // }
-    // else {
-    //   //if not do not allow
-    // }
-
-    leave.findOne({
-      where: { status: 0, id: leaveId, empId: empId }
-    }).then(function (leaveData) {
-      if (leaveData == null) {
-        res.status(404).send({
-          message: 'Leaves not found'
-        })
-      } else {
-        res.send(leaveData)
-        var noOfLeave = leaveData.noOfDays
-        var leaveType = leaveData.leaveTypeId
-        console.log(leaveType)
-        leave.update(
-          { status: 1 },
-          { where: { id: leaveId, empId: empId } })
-        if (leaveType == 1) {
-          console.log('inside casual')
-          employeeLeaves.update(
-            { casualLeave: test.sequelize.literal('casualLeave -' + noOfLeave + '') },
-            { where: { empId: empId } }
-          )
-        } else if (leaveType == 2) {
-          console.log('inside sick')
-          employeeLeaves.update({ sickLeave: test.sequelize.literal('sickLeave - ' + noOfLeave + '') },
-            { where: { empId: empId } }
-          )
-        } else if (leaveType == 3) {
-          console.log('inside earned')
-          employeeLeaves.update({ earnedLeave: test.sequelize.literal('earnedLeave - ' + noOfLeave + '') },
-            { where: { empId: empId } }
-          )
-        } else if (leaveType == 4) {
-          console.log('inside unpaid leave')
-          res.status(201).send({ message: 'unpaid leave approved' })
-          // employeeLeaves.update({ earnedLeave: test.sequelize.literal('earnedLeave - ' + noOfLeave + '') },
-          //     { where: { empId: empId } }
-          // )
+    if (req.user.empTypeId == 1) {
+      //allow to approve leave
+      leave.findOne({
+        where: { status: 0, id: leaveId, empId: empId }
+      }).then(function (leaveData) {
+        if (leaveData == null) {
+          res.status(404).send({
+            message: 'Leaves not found'
+          })
+        } else {
+          res.send(leaveData)
+          var noOfLeave = leaveData.noOfDays
+          var leaveType = leaveData.leaveTypeId
+          console.log(leaveType)
+          leave.update(
+            { status: 1 },
+            { where: { id: leaveId, empId: empId } })
+          if (leaveType == 1) {
+            console.log('inside casual')
+            employeeLeaves.update(
+              { casualLeave: test.sequelize.literal('casualLeave -' + noOfLeave + '') },
+              { where: { empId: empId } }
+            )
+          } else if (leaveType == 2) {
+            console.log('inside sick')
+            employeeLeaves.update({ sickLeave: test.sequelize.literal('sickLeave - ' + noOfLeave + '') },
+              { where: { empId: empId } }
+            )
+          } else if (leaveType == 3) {
+            console.log('inside earned')
+            employeeLeaves.update({ earnedLeave: test.sequelize.literal('earnedLeave - ' + noOfLeave + '') },
+              { where: { empId: empId } }
+            )
+          } else if (leaveType == 4) {
+            console.log('inside unpaid leave')
+            // res.status(201).send({ message: 'unpaid leave approved' })
+            // employeeLeaves.update({ earnedLeave: test.sequelize.literal('earnedLeave - ' + noOfLeave + '') },
+            //     { where: { empId: empId } }
+            // )
+          }
         }
-      }
-    })
+      })
+    }
+    else {
+      //if not do not allow
+      res.status(401).send({ message: 'You do not have rights to approve leave' })
+    }
   },
   deleteLeave(req, res) {
     const id = req.params.leaveId
@@ -440,7 +450,7 @@ module.exports = {
           { status: 2 },
           { where: { id: leaveId, empId: empId } }
         ).then(() => {
-          res.status(200).send('Leave Rejected')
+          res.status(200).send({message:'Leave Rejected'})
         })
       }
     })

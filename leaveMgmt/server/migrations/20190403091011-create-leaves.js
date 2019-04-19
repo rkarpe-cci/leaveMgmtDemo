@@ -59,10 +59,10 @@ module.exports = {
       },
       isMorningHalf: {
         type: Sequelize.TINYINT
-      }
-      // isNonPaidLeave:{
-      //   type: Sequelize.TINYINT
-      // },
+      },
+      isUnpaiPaidLeave:{
+        type: Sequelize.TINYINT
+      },
     })
   },
   down: (queryInterface, Sequelize) => {

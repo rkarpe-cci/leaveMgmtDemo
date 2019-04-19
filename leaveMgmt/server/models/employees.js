@@ -41,15 +41,15 @@ module.exports = (sequelize, DataTypes) => {
   employees.prototype.toAuthJSON = function () {
     return {
       token: 'jwt' + ' ' + this.createToken(),
-      ...this.toJSON()
-    }
-  };
-  employees.prototype.toJSON = function () {
-    return {
-      id: this.id,
-      username: this.userName,
-      email: this.email
+      //...this.toJSON()
     }
   };
   return employees
 }
+// employees.prototype.toJSON = function () {
+//   return {
+//     id: this.id,
+//     username: this.userName,
+//     email: this.email
+//   }
+// };

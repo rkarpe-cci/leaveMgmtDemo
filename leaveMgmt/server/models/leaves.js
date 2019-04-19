@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     noOfDays: DataTypes.DOUBLE,
     medicalCertPath: DataTypes.STRING,
     isHalfDay: DataTypes.TINYINT,
-    isMorningHalf: DataTypes.TINYINT
-    // isNonPaidLeave:DataTypes.TINYINT
+    isMorningHalf: DataTypes.TINYINT,
+    isUnpaiPaidLeave:DataTypes.TINYINT
   }, {})
   leaves.associate = function (models) {
     // associations can be defined here
